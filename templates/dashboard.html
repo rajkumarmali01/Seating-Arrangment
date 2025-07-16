@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seating Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="dashboard-body">
+
+  <header>
+    <h1>Company Seating Management</h1>
+    <form method="post" action="{{ url_for('logout') }}">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </header>
+
+  <nav class="building-tabs">
+    {% for building in buildings %}
+      <button class="tab-btn {% if building == selected_building %}active{% endif %}" onclick="window.location.href='?building={{ building }}'">
+        {{ building }}
+      </button>
+    {% endfor %}
+  </nav>
+
+  <section class="dashboard-section">
+    <h2>Seating Map - {{ selected_building }}</h2>
+
+    <form method="post" action="{{ url_for('update_seating') }}">
+      <input type="hidden" name="building" value="{{ selected_building }}">
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              {% for column in columns %}
+                <th>{{ column }}</th>
+              {% endfor %}
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in seating_data %}
+              <tr>
+                {% for col in columns %}
+                  <td>
+                    <input type="text" name="{{ row['id'] }}_{{ col }}" value="{{ row[col] }}">
+                  </td>
+                {% endfor %}
+                <td><input type="checkbox" name="update_rows" value="{{ row['id'] }}"></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <button class="update-btn" type="submit">Save Changes</button>
+    </form>
+  </section>
+
+</body>
+</html>
