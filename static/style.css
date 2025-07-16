@@ -1,0 +1,139 @@
+/* Reset and basic */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+h1, h2 {
+  font-weight: 600;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Login Page */
+.login-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #0043a4, #4c82f7);
+}
+
+.login-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-bottom: 1rem;
+}
+
+.login-form input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.login-form button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+
+/* Dashboard layout */
+header {
+  background-color: #1e3a8a;
+  color: white;
+  padding: 1.2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logout-btn {
+  background-color: #ff3b3b;
+  font-weight: 600;
+}
+
+.building-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
+  background: #e3e9f3;
+}
+
+.tab-btn {
+  margin: 5px;
+  background-color: #ccc;
+  color: black;
+}
+
+.tab-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.dashboard-section {
+  padding: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+table thead {
+  background-color: #007bff;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-btn {
+  margin-top: 20px;
+}
