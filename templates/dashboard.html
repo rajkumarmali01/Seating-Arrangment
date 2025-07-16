@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - {{ session['admin'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Welcome, {{ session['admin'] }}</h2>
+    <a href="/logout">Logout</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p class="flash">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <table border="1">
+        <thead>
+            <tr>
+                {% for col in columns %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+                <th>Edit Column</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for col in columns %}
+                        <td>{{ row[col] }}</td>
+                    {% endfor %}
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="row_index" value="{{ loop.index0 }}">
+                            <select name="column">
+                                {% for col in columns %}
+                                    <option value="{{ col }}">{{ col }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="text" name="new_value" placeholder="New value" required>
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
