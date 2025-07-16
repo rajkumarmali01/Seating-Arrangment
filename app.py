@@ -1,57 +1,71 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "c789cfee-c6da-43f2-b0d0-176387d4e316",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "from flask import Flask, render_template\n",
-    "\n",
-    "app = Flask(__name__)\n",
-    "\n",
-    "@app.route(\"/\")\n",
-    "def login():\n",
-    "    return render_template(\"login.html\")\n",
-    "\n",
-    "@app.route(\"/dashboard\")\n",
-    "def dashboard():\n",
-    "    # Mock data for preview\n",
-    "    buildings = [\"Building A\", \"Building B\"]\n",
-    "    selected_building = \"Building A\"\n",
-    "    columns = [\"Seat\", \"Employee\"]\n",
-    "    seating_data = [{\"id\": 1, \"Seat\": \"101\", \"Employee\": \"Alice\"}, {\"id\": 2, \"Seat\": \"102\", \"Employee\": \"Bob\"}]\n",
-    "    return render_template(\"dashboard.html\",\n",
-    "                           buildings=buildings,\n",
-    "                           selected_building=selected_building,\n",
-    "                           columns=columns,\n",
-    "                           seating_data=seating_data)\n",
-    "\n",
-    "if __name__ == \"__main__\":\n",
-    "    app.run(debug=True)\n"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.12.4"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
+from flask import Flask, render_template, request, redirect, session, url_for, flash
+import pandas as pd
+from openpyxl import load_workbook
+import os
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
+
+EXCEL_FILE = 'seating_data.xlsx'
+
+# Hardcoded admin credentials for 9 buildings
+ADMIN_CREDENTIALS = {
+    "Building1": "Building1@123",
+    "Building2": "Building2@123",
+    "Building3": "Building3@123",
+    "Building4": "Building4@123",
+    "Building5": "Building5@123",
+    "Building6": "Building6@123",
+    "Building7": "Building7@123",
+    "Building8": "Building8@123",
+    "Building9": "Building9@123"
 }
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if username in ADMIN_CREDENTIALS and ADMIN_CREDENTIALS[username] == password:
+            session['admin'] = username
+            return redirect('/dashboard')
+        else:
+            flash("Invalid credentials")
+            return redirect('/')
+
+    return render_template('login.html')
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    if 'admin' not in session:
+        return redirect('/')
+
+    df = pd.read_excel(EXCEL_FILE)
+    building = session['admin']
+    building_df = df[df['Building Name'] == building].reset_index(drop=True)
+
+    if request.method == 'POST':
+        row_index = int(request.form['row_index'])
+        column = request.form['column']
+        new_value = request.form['new_value']
+
+        full_df = pd.read_excel(EXCEL_FILE)
+        target_indices = full_df[full_df['Building Name'] == building].index
+
+        if row_index < len(target_indices):
+            actual_index = target_indices[row_index]
+            full_df.at[actual_index, column] = new_value
+            full_df.to_excel(EXCEL_FILE, index=False)
+            flash('Data updated successfully!')
+        return redirect('/dashboard')
+
+    return render_template('dashboard.html', data=building_df.to_dict(orient='records'), columns=building_df.columns)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+if __name__ == '__main__':
+    app.run(debug=True)
