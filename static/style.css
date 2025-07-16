@@ -1,0 +1,27 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 30px;
+    background-color: #f4f4f4;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 40px;
+    background: white;
+    box-shadow: 0 0 10px gray;
+    border-radius: 10px;
+}
+
+input, button, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+.flash {
+    color: green;
+}
+.error {
+    color: red;
+}
